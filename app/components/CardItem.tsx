@@ -101,11 +101,14 @@ function CardItem({ item }: any) {
             <Box ml={1.5}>
               {addedItem ? (
                 <DeleteButton
-                  disabled={openSnack}
+                  disabled={fetcher.state !== 'idle'}
                   onClick={clickDeleteButton}
                 />
               ) : (
-                <AddButton disabled={openSnack} onClick={clickAddButton} />
+                <AddButton
+                  disabled={fetcher.state !== 'idle'}
+                  onClick={clickAddButton}
+                />
               )}
             </Box>
           </Box>
