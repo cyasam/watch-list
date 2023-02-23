@@ -26,15 +26,14 @@ export async function loader() {
 }
 
 export async function action({ request }: ActionArgs) {
-  const user = await getUserSession(request.headers.get('Cookie'));
-
   try {
+    const user = await getUserSession(request.headers.get('Cookie'));
+    if (!user) {
+      throw new Error('Please login.');
+    }
+
     const formData = await request.formData();
     const { movieId } = Object.fromEntries(formData);
-
-    if (!movieId || !user) {
-      throw new Error('Could not added.');
-    }
 
     await addToWatchList(movieId.toString(), user.id);
 

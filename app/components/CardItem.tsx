@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { css } from '@emotion/css';
 import {
   Box,
@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { formatDate } from '~/utils/formatDate';
-import { useFetcher } from '@remix-run/react';
+import { useFetcher, useMatches } from '@remix-run/react';
 import Loading from './Alerts/Loading';
 import Success from './Alerts/Success';
 import Error from './Alerts/Error';
@@ -23,6 +23,10 @@ const tmdbMovieDetailBaseUrl = 'https://www.themoviedb.org/movie';
 function CardItem({ item }: any) {
   const { id, title, backdrop_path, release_date, vote_average } = item;
   const [openSnack, setSnack] = useState(false);
+  const matches = useMatches();
+  const { user, watchList } = matches.find(
+    (match) => match.id === 'routes/__app'
+  )?.data;
 
   const fetcher = useFetcher();
 
@@ -34,6 +38,11 @@ function CardItem({ item }: any) {
   const onSnackClose = useCallback(() => {
     setSnack(false);
   }, []);
+
+  const addedItem = useMemo(
+    () => !user || watchList?.data.find((item: any) => item.id === id),
+    [id, user, watchList?.data]
+  );
 
   return (
     <>
@@ -84,7 +93,7 @@ function CardItem({ item }: any) {
               </Typography>
             </Box>
             <Box ml={1.5}>
-              <AddButton onClick={clickAddButton} />
+              <AddButton disabled={addedItem} onClick={clickAddButton} />
             </Box>
           </Box>
         </CardContent>
@@ -131,13 +140,18 @@ function CardItem({ item }: any) {
 export default CardItem;
 
 interface AddButtonProps {
+  disabled?: boolean;
   onClick(): void;
 }
 
-const AddButton = ({ onClick }: AddButtonProps) => {
+const AddButton = ({ disabled, onClick }: AddButtonProps) => {
   return (
     <Box display="inline-flex">
-      <IconButton onClick={onClick} title="Add to watch list">
+      <IconButton
+        onClick={onClick}
+        disabled={disabled}
+        title="Add to watch list"
+      >
         <AddIcon />
       </IconButton>
     </Box>
