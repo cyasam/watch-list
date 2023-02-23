@@ -11,10 +11,10 @@ import {
   getMovies,
 } from '~/data/movies.server';
 
-export default function Index() {
-  const popularMovies: any = useLoaderData();
+export default function TopRated() {
+  const topRatedMovies: any = useLoaderData();
   const fetcher = useFetcher();
-  const [movies, setMovies] = useState(popularMovies?.results);
+  const [movies, setMovies] = useState(topRatedMovies?.results);
 
   useEffect(() => {
     if (!fetcher.data || fetcher.state === 'loading') {
@@ -24,7 +24,7 @@ export default function Index() {
     setMovies((prevMovies: any) => [...prevMovies, ...fetcher.data.results]);
   }, [fetcher.data, fetcher.state]);
 
-  const initialPage = popularMovies.page;
+  const initialPage = topRatedMovies.page;
 
   return (
     <Box position="relative">
@@ -32,7 +32,7 @@ export default function Index() {
         loading={fetcher.state === 'loading'}
         loadNext={() => {
           const page = fetcher.data ? fetcher.data.page + 1 : initialPage + 1;
-          const query = `?index&page=${page}`;
+          const query = `/top-rated?page=${page}`;
           fetcher.load(query);
         }}
       >
@@ -73,7 +73,7 @@ export async function loader({ request }: LoaderArgs) {
   const searchParams: any = new URL(request.url).searchParams;
 
   const page = searchParams.get('page') ?? '1';
-  return getMovies({ page, type: 'popular' });
+  return getMovies({ page, type: 'top_rated' });
 }
 
 export async function action({ request }: ActionArgs) {

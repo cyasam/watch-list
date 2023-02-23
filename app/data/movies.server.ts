@@ -8,9 +8,15 @@ const movieApi = axios.create({
   },
 });
 
-export const getPopularMovies = async ({ page }: { page: string }) => {
+export const getMovies = async ({
+  page,
+  type,
+}: {
+  page: string;
+  type: string;
+}) => {
   try {
-    const response = await movieApi.get('/popular', { params: { page } });
+    const response = await movieApi.get(`/${type}`, { params: { page } });
 
     return response.data;
   } catch (error: any) {

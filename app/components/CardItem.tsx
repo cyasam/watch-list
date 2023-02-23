@@ -46,8 +46,8 @@ function CardItem({ item }: any) {
   }, []);
 
   const addedItem = useMemo(
-    () => !user || !!watchList?.data.find((item: any) => item.id === id),
-    [id, user, watchList?.data]
+    () => !!watchList?.data.find((item: any) => item.id === id),
+    [id, watchList?.data]
   );
 
   return (
@@ -66,18 +66,26 @@ function CardItem({ item }: any) {
           `}
         >
           <Box position="relative" mb={1}>
-            <img
-              src={`${imageBaseUrl}${backdrop_path}`}
-              width="300"
-              height="169"
-              alt={title}
-              loading="lazy"
-              className={css`
-                width: 100%;
-                height: auto;
-                border-radius: 5px;
-              `}
-            />
+            {backdrop_path ? (
+              <img
+                src={`${imageBaseUrl}${backdrop_path}`}
+                width="400"
+                height="225"
+                alt={title}
+                loading="lazy"
+                className={css`
+                  width: 100%;
+                  height: auto;
+                  border-radius: 5px;
+                `}
+              />
+            ) : (
+              <Box
+                width="100%"
+                sx={{ aspectRatio: '16/9' }}
+                bgcolor="rgba(255,255,255,0.1)"
+              />
+            )}
             <Chip
               color="primary"
               sx={{
@@ -106,7 +114,7 @@ function CardItem({ item }: any) {
                 />
               ) : (
                 <AddButton
-                  disabled={fetcher.state !== 'idle'}
+                  disabled={!user || fetcher.state !== 'idle'}
                   onClick={clickAddButton}
                 />
               )}

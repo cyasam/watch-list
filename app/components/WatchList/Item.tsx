@@ -24,8 +24,6 @@ function Item({ item }: any) {
     setSnack(false);
   }, []);
 
-  console.log(fetcher.type, fetcher.data, openSnack);
-
   return (
     <Box display="flex" mb={1.5}>
       <Box mr="1rem">

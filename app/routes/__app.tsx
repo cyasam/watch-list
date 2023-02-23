@@ -1,7 +1,8 @@
-import { Drawer, styled } from '@mui/material';
+import { useCallback } from 'react';
+import { Button, Drawer, styled } from '@mui/material';
 import { Box } from '@mui/system';
 import type { LoaderArgs } from '@remix-run/node';
-import { Outlet } from '@remix-run/react';
+import { Outlet, Link as RouterLink, useMatches } from '@remix-run/react';
 import Sidebar from '~/components/Sidebar';
 import { getUserSession } from '~/data/auth.server';
 import { getWatchlist } from '~/data/movies.server';
@@ -28,6 +29,15 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
 }));
 
 function AppLayout() {
+  const matches = useMatches();
+
+  const isActive = useCallback(
+    (routeId: string) => {
+      return !!matches.find((match) => match.id === routeId);
+    },
+    [matches]
+  );
+
   return (
     <Box sx={{ display: 'flex' }}>
       <Drawer
@@ -45,9 +55,38 @@ function AppLayout() {
       >
         <Sidebar />
       </Drawer>
-      <Main open={true}>
-        <Outlet />
-      </Main>
+      <Box>
+        <Box
+          padding={(theme) => theme.spacing(3)}
+          position="sticky"
+          top={0}
+          zIndex={1}
+          sx={{ backdropFilter: 'blur(20px)' }}
+          mb={(theme) => theme.spacing(-3)}
+        >
+          <Button
+            variant={isActive('routes/__app/index') ? 'contained' : 'outlined'}
+            component={RouterLink}
+            to="/"
+            sx={{ marginRight: 3 }}
+          >
+            Popular
+          </Button>
+          <Button
+            variant={
+              isActive('routes/__app/top-rated') ? 'contained' : 'outlined'
+            }
+            component={RouterLink}
+            to="/top-rated"
+            sx={{ marginRight: 3 }}
+          >
+            Top Rated
+          </Button>
+        </Box>
+        <Main open={true}>
+          <Outlet />
+        </Main>
+      </Box>
     </Box>
   );
 }
