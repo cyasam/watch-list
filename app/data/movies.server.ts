@@ -66,3 +66,11 @@ export const addToWatchList = async (movieId: string, userId: string) => {
 
   return newItem;
 };
+
+export const deleteWatchListItem = async (movieId: string, userId: string) => {
+  const deletedItem = await prisma.watchList.deleteMany({
+    where: { movieId, userId },
+  });
+
+  return deletedItem;
+};

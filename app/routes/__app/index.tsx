@@ -3,7 +3,11 @@ import type { ActionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import CardItem from '~/components/CardItem';
 import { getUserSession } from '~/data/auth.server';
-import { addToWatchList, getPopularMovies } from '~/data/movies.server';
+import {
+  addToWatchList,
+  deleteWatchListItem,
+  getPopularMovies,
+} from '~/data/movies.server';
 
 export default function Index() {
   const popularMovies: any = useLoaderData();
@@ -35,7 +39,11 @@ export async function action({ request }: ActionArgs) {
     const formData = await request.formData();
     const { movieId } = Object.fromEntries(formData);
 
-    await addToWatchList(movieId.toString(), user.id);
+    if (request.method === 'DELETE') {
+      await deleteWatchListItem(movieId.toString(), user.id);
+    } else {
+      await addToWatchList(movieId.toString(), user.id);
+    }
 
     return {
       error: null,
