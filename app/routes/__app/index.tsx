@@ -93,6 +93,7 @@ export async function action({ request }: ActionArgs) {
     return {
       error: null,
       ok: true,
+      type: request.method === 'DELETE' ? 'delete' : 'add',
     };
   } catch (error: any) {
     return { error: error.message, ok: false };

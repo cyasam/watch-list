@@ -126,9 +126,9 @@ function CardItem({ item }: any) {
         </CardActions>
       </Card>
 
-      {fetcher.state !== 'idle' && (
+      {fetcher.state === 'loading' && (
         <Loading open={openSnack} onClose={onSnackClose}>
-          Adding...
+          {fetcher.data.type === 'delete' ? 'Deleting...' : 'Adding...'}
         </Loading>
       )}
 
@@ -136,7 +136,9 @@ function CardItem({ item }: any) {
         <>
           {fetcher.data.ok && (
             <Success open={openSnack} onClose={onSnackClose}>
-              Succesfully added!
+              {fetcher.data.type === 'delete'
+                ? 'Succesfully deleted!'
+                : 'Succesfully added!'}
             </Success>
           )}
           {!fetcher.data.ok && (

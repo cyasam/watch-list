@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react';
 import { formatDate } from '~/utils/formatDate';
 import Error from '../Alerts/Error';
 import Loading from '../Alerts/Loading';
+import Success from '../Alerts/Success';
 
 const POSTER_IMAGE_BASEURL = 'https://image.tmdb.org/t/p/w200';
 
@@ -22,6 +23,8 @@ function Item({ item }: any) {
   const onSnackClose = useCallback(() => {
     setSnack(false);
   }, []);
+
+  console.log(fetcher.type, fetcher.data, openSnack);
 
   return (
     <Box display="flex" mb={1.5}>
@@ -58,8 +61,13 @@ function Item({ item }: any) {
         </Loading>
       )}
 
-      {fetcher.type === 'done' && (
+      {fetcher.type === 'actionReload' && (
         <>
+          {fetcher.data.ok && (
+            <Success open={openSnack} onClose={onSnackClose}>
+              Succesfully deleted!
+            </Success>
+          )}
           {!fetcher.data.ok && (
             <Error open={openSnack} onClose={onSnackClose}>
               {fetcher.data.error}
