@@ -22,6 +22,7 @@ export const getWatchlist = async (userId: string) => {
   try {
     const watchListItems = await prisma.watchList.findMany({
       where: { userId },
+      orderBy: { dateAdded: 'desc' },
     });
 
     if (!watchListItems) {
