@@ -4,7 +4,6 @@ import { useCallback, useState } from 'react';
 import { formatDate } from '~/utils/formatDate';
 import Error from '../Alerts/Error';
 import Loading from '../Alerts/Loading';
-import Success from '../Alerts/Success';
 
 const POSTER_IMAGE_BASEURL = 'https://image.tmdb.org/t/p/w200';
 

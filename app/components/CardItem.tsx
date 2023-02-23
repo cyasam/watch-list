@@ -40,7 +40,7 @@ function CardItem({ item }: any) {
   }, []);
 
   const addedItem = useMemo(
-    () => !user || watchList?.data.find((item: any) => item.id === id),
+    () => !user || !!watchList?.data.find((item: any) => item.id === id),
     [id, user, watchList?.data]
   );
 
