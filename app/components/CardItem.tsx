@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
+import { useFetcher, useMatches } from '@remix-run/react';
 import { css } from '@emotion/css';
 import {
   Box,
@@ -11,8 +12,8 @@ import {
   Typography,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 import { formatDate } from '~/utils/formatDate';
-import { useFetcher, useMatches } from '@remix-run/react';
 import Loading from './Alerts/Loading';
 import Success from './Alerts/Success';
 import Error from './Alerts/Error';
@@ -32,6 +33,11 @@ function CardItem({ item }: any) {
 
   const clickAddButton = useCallback(() => {
     fetcher.submit({ movieId: id }, { method: 'post' });
+    setSnack(true);
+  }, [fetcher, id]);
+
+  const clickDeleteButton = useCallback(() => {
+    fetcher.submit({ movieId: id }, { method: 'delete' });
     setSnack(true);
   }, [fetcher, id]);
 
@@ -93,7 +99,14 @@ function CardItem({ item }: any) {
               </Typography>
             </Box>
             <Box ml={1.5}>
-              <AddButton disabled={addedItem} onClick={clickAddButton} />
+              {addedItem ? (
+                <DeleteButton
+                  disabled={openSnack}
+                  onClick={clickDeleteButton}
+                />
+              ) : (
+                <AddButton disabled={openSnack} onClick={clickAddButton} />
+              )}
             </Box>
           </Box>
         </CardContent>
@@ -153,6 +166,20 @@ const AddButton = ({ disabled, onClick }: AddButtonProps) => {
         title="Add to watch list"
       >
         <AddIcon />
+      </IconButton>
+    </Box>
+  );
+};
+
+const DeleteButton = ({ disabled, onClick }: AddButtonProps) => {
+  return (
+    <Box display="inline-flex">
+      <IconButton
+        onClick={onClick}
+        disabled={disabled}
+        title="Remove from watch list"
+      >
+        <RemoveIcon />
       </IconButton>
     </Box>
   );
