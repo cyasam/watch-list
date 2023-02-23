@@ -4,7 +4,12 @@ import { Link as RouterLink } from '@remix-run/react';
 
 function AuthArea() {
   return (
-    <Box display="flex" flexDirection="column" alignItems="center">
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      padding={(theme) => theme.spacing(3)}
+    >
       <Button component={RouterLink} variant="contained" to="/login">
         Login
       </Button>

@@ -1,4 +1,11 @@
-import { Alert, Box, Button, Link, TextField } from '@mui/material';
+import {
+  Alert,
+  Box,
+  Button,
+  CircularProgress,
+  Link,
+  TextField,
+} from '@mui/material';
 import type { ActionArgs } from '@remix-run/node';
 import {
   Form,
@@ -52,7 +59,7 @@ function Login() {
             Create new account
           </Link>
           <Button disabled={isSigning} type="submit" variant="contained">
-            {isSigning ? 'Signining' : 'Login'}
+            {isSigning ? <CircularProgress size="1.5rem" /> : 'Login'}
           </Button>
         </Box>
       </Box>

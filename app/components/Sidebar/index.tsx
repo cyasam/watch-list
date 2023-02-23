@@ -8,17 +8,12 @@ function Sidebar() {
   const { user } = useLoaderData();
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      padding={(theme) => theme.spacing(3)}
-      height="100vh"
-    >
+    <Box display="flex" flexDirection="column" height="100vh">
       <Box position="sticky" top="0" sx={{ backdropFilter: 'blur(10px)' }}>
         {user && <UserArea />}
         {!user && <AuthArea />}
       </Box>
-      <Box>
+      <Box paddingX={(theme) => theme.spacing(3)}>
         <Typography
           variant="h6"
           component="h2"

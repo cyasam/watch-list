@@ -9,10 +9,11 @@ import {
   CardContent,
   Chip,
   IconButton,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { formatDate } from '~/utils/formatDate';
 import Loading from './Alerts/Loading';
 import Success from './Alerts/Success';
@@ -177,13 +178,11 @@ interface AddButtonProps {
 const AddButton = ({ disabled, onClick }: AddButtonProps) => {
   return (
     <Box display="inline-flex">
-      <IconButton
-        onClick={onClick}
-        disabled={disabled}
-        title="Add to watch list"
-      >
-        <AddIcon />
-      </IconButton>
+      <Tooltip title="Add to watch list" placement="bottom">
+        <IconButton onClick={onClick} disabled={disabled}>
+          <AddIcon />
+        </IconButton>
+      </Tooltip>
     </Box>
   );
 };
@@ -191,13 +190,11 @@ const AddButton = ({ disabled, onClick }: AddButtonProps) => {
 const DeleteButton = ({ disabled, onClick }: AddButtonProps) => {
   return (
     <Box display="inline-flex">
-      <IconButton
-        onClick={onClick}
-        disabled={disabled}
-        title="Remove from watch list"
-      >
-        <RemoveIcon />
-      </IconButton>
+      <Tooltip title="Remove from watch list" placement="bottom">
+        <IconButton onClick={onClick} disabled={disabled}>
+          <DeleteIcon />
+        </IconButton>
+      </Tooltip>
     </Box>
   );
 };

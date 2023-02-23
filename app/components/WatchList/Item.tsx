@@ -49,7 +49,7 @@ function Item({ item }: any) {
           onClick={onDelete}
           sx={{ marginTop: 1.5 }}
         >
-          Delete
+          Remove
         </Button>
       </Box>
 
