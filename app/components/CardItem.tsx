@@ -24,6 +24,8 @@ const tmdbMovieDetailBaseUrl = 'https://www.themoviedb.org/movie';
 function CardItem({ item }: any) {
   const { id, title, backdrop_path, release_date, vote_average } = item;
   const [openSnack, setSnack] = useState(false);
+  const [type, setType] = useState<string>();
+
   const matches = useMatches();
   const { user, watchList } = matches.find(
     (match) => match.id === 'routes/__app'
@@ -34,11 +36,13 @@ function CardItem({ item }: any) {
   const clickAddButton = useCallback(() => {
     fetcher.submit({ movieId: id }, { method: 'post' });
     setSnack(true);
+    setType('post');
   }, [fetcher, id]);
 
   const clickDeleteButton = useCallback(() => {
     fetcher.submit({ movieId: id }, { method: 'delete' });
     setSnack(true);
+    setType('delete');
   }, [fetcher, id]);
 
   const onSnackClose = useCallback(() => {
@@ -137,9 +141,9 @@ function CardItem({ item }: any) {
         </CardActions>
       </Card>
 
-      {fetcher.state === 'loading' && (
+      {fetcher.state !== 'idle' && (
         <Loading open={openSnack} onClose={onSnackClose}>
-          {fetcher.data.type === 'delete' ? 'Deleting...' : 'Adding...'}
+          {type === 'delete' ? 'Deleting...' : 'Adding...'}
         </Loading>
       )}
 
