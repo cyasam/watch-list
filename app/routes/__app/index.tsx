@@ -4,12 +4,7 @@ import { useFetcher, useLoaderData } from '@remix-run/react';
 import { useEffect, useState } from 'react';
 import CardItem from '~/components/CardItem';
 import InfiniteScroller from '~/components/InfiniteScroller';
-import { getUserSession } from '~/data/auth.server';
-import {
-  addToWatchList,
-  deleteWatchListItem,
-  getMovies,
-} from '~/data/movies.server';
+import { getMovies, movieActions } from '~/data/movies.server';
 
 export default function Index() {
   const popularMovies: any = useLoaderData();
@@ -78,25 +73,7 @@ export async function loader({ request }: LoaderArgs) {
 
 export async function action({ request }: ActionArgs) {
   try {
-    const user = await getUserSession(request.headers.get('Cookie'));
-    if (!user) {
-      throw new Error('Please login.');
-    }
-
-    const formData = await request.formData();
-    const { movieId } = Object.fromEntries(formData);
-
-    if (request.method === 'DELETE') {
-      await deleteWatchListItem(movieId.toString(), user.id);
-    } else {
-      await addToWatchList(movieId.toString(), user.id);
-    }
-
-    return {
-      error: null,
-      ok: true,
-      type: request.method === 'DELETE' ? 'delete' : 'add',
-    };
+    return movieActions(request);
   } catch (error: any) {
     return { error: error.message, ok: false };
   }

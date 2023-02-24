@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getUserSession } from './auth.server';
 import { prisma } from './database.server';
 
 const movieApi = axios.create({
@@ -79,4 +80,26 @@ export const deleteWatchListItem = async (movieId: string, userId: string) => {
   });
 
   return deletedItem;
+};
+
+export const movieActions = async (request: any) => {
+  const user = await getUserSession(request.headers.get('Cookie'));
+  if (!user) {
+    throw new Error('Please login.');
+  }
+
+  const formData = await request.formData();
+  const { movieId } = Object.fromEntries(formData);
+
+  if (request.method === 'DELETE') {
+    await deleteWatchListItem(movieId.toString(), user.id);
+  } else {
+    await addToWatchList(movieId.toString(), user.id);
+  }
+
+  return {
+    error: null,
+    ok: true,
+    type: request.method === 'DELETE' ? 'delete' : 'add',
+  };
 };
