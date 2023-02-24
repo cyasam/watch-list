@@ -9,7 +9,12 @@ function Sidebar() {
 
   return (
     <Box display="flex" flexDirection="column" height="100vh">
-      <Box position="sticky" top="0" sx={{ backdropFilter: 'blur(10px)' }}>
+      <Box
+        position="sticky"
+        top="0"
+        sx={{ backdropFilter: 'blur(10px)' }}
+        zIndex="10"
+      >
         {user && <UserArea />}
         {!user && <AuthArea />}
       </Box>
