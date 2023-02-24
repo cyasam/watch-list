@@ -24,6 +24,7 @@ const InfiniteScroller = (props: {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      onScroll();
       window.addEventListener('scroll', onScroll);
     }
 
