@@ -1,7 +1,7 @@
+import { useEffect, useState } from 'react';
 import { Box, CircularProgress, Grid } from '@mui/material';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { useFetcher, useLoaderData } from '@remix-run/react';
-import { useEffect, useState } from 'react';
 import CardItem from '~/components/CardItem';
 import InfiniteScroller from '~/components/InfiniteScroller';
 import { getMovies, movieActions } from '~/data/movies.server';

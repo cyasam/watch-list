@@ -100,6 +100,7 @@ export const movieActions = async (request: any) => {
   return {
     error: null,
     ok: true,
+    movieId: movieId.toString(),
     type: request.method === 'DELETE' ? 'delete' : 'add',
   };
 };
