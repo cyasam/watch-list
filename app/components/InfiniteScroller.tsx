@@ -13,11 +13,11 @@ const InfiniteScroller = (props: {
   }, [loadNext]);
 
   const onScroll = useCallback(() => {
-    const documentHeight = document.documentElement.scrollHeight;
-    const scrollDifference = Math.floor(window.innerHeight + window.scrollY);
-    const scrollNotEnded = documentHeight - 150 > scrollDifference;
+    const scrollEnded =
+      window.innerHeight + window.pageYOffset >=
+      document.body.offsetHeight - 200;
 
-    if (!scrollNotEnded && !loading) {
+    if (scrollEnded && !loading) {
       scrollListener.current();
     }
   }, [loading]);

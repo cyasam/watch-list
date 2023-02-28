@@ -11,12 +11,14 @@ import { pageTitle } from '~/root';
 
 export default function SearchPage() {
   const searchMovies: any = useLoaderData();
+  const fetcher = useFetcher();
+  const [searchParams] = useSearchParams();
+
   const [movies, setMovies] = useState(searchMovies?.results);
   const [totalPages, setTotalPages] = useState(searchMovies?.total_pages);
 
-  const fetcher = useFetcher();
-  const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('query');
+  const [query, setQuery] = useState(searchQuery);
 
   useEffect(() => {
     if (!fetcher.data || fetcher.state === 'loading') {
@@ -27,9 +29,12 @@ export default function SearchPage() {
   }, [fetcher.data, fetcher.state]);
 
   useEffect(() => {
-    setMovies(searchMovies?.results);
-    setTotalPages(searchMovies?.total_pages);
-  }, [searchQuery, searchMovies?.results, searchMovies?.total_pages]);
+    if (query !== searchQuery) {
+      setMovies(searchMovies?.results);
+      setTotalPages(searchMovies?.total_pages);
+      setQuery(searchQuery);
+    }
+  }, [query, searchQuery, searchMovies?.results, searchMovies?.total_pages]);
 
   const initialPage = searchMovies.page;
 
