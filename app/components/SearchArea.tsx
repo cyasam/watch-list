@@ -61,6 +61,10 @@ function SearchArea() {
     setValue(defaultValue);
   }, [defaultValue]);
 
+  const isLoading =
+    transition.location?.pathname === '/search' &&
+    transition.state === 'submitting';
+
   return (
     <Form method="get" action="/search">
       <Search>
@@ -74,7 +78,7 @@ function SearchArea() {
           placeholder="Search…"
           inputProps={{ 'aria-label': 'search' }}
         />
-        {transition.state === 'submitting' && (
+        {isLoading && (
           <CircularProgress
             sx={{ marginRight: 2 }}
             color="inherit"
