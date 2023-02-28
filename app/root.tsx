@@ -17,9 +17,11 @@ const darkTheme = createTheme({
   },
 });
 
+export const pageTitle = 'Watch List';
+
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
-  title: 'Watch List App',
+  title: pageTitle,
   viewport: 'width=device-width,initial-scale=1',
 });
 

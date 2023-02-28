@@ -191,9 +191,11 @@ const AddButton = ({ disabled, onClick }: AddButtonProps) => {
   return (
     <Box display="inline-flex">
       <Tooltip title="Add to watch list" placement="bottom">
-        <IconButton onClick={onClick} disabled={disabled}>
-          <AddIcon />
-        </IconButton>
+        <span>
+          <IconButton onClick={onClick} disabled={disabled}>
+            <AddIcon />
+          </IconButton>
+        </span>
       </Tooltip>
     </Box>
   );
@@ -203,9 +205,11 @@ const DeleteButton = ({ disabled, onClick }: AddButtonProps) => {
   return (
     <Box display="inline-flex">
       <Tooltip title="Remove from watch list" placement="bottom">
-        <IconButton onClick={onClick} disabled={disabled}>
-          <DeleteIcon />
-        </IconButton>
+        <span>
+          <IconButton onClick={onClick} disabled={disabled}>
+            <DeleteIcon />
+          </IconButton>
+        </span>
       </Tooltip>
     </Box>
   );

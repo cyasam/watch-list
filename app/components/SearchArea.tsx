@@ -1,7 +1,9 @@
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
-import { Form, useSearchParams } from '@remix-run/react';
+import { Form, useSearchParams, useTransition } from '@remix-run/react';
+import { CircularProgress } from '@mui/material';
+import { useEffect, useState } from 'react';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -12,6 +14,8 @@ const Search = styled('div')(({ theme }) => ({
   },
   marginLeft: 0,
   width: '100%',
+  display: 'flex',
+  alignItems: 'center',
   [theme.breakpoints.up('sm')]: {
     marginLeft: theme.spacing(1),
     width: 'auto',
@@ -47,7 +51,15 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 function SearchArea() {
   const [searchParams] = useSearchParams();
+  const transition = useTransition();
   const searchQuery = searchParams.get('query');
+
+  const defaultValue = searchQuery ?? '';
+  const [value, setValue] = useState(defaultValue);
+
+  useEffect(() => {
+    setValue(defaultValue);
+  }, [defaultValue]);
 
   return (
     <Form method="get" action="/search">
@@ -57,10 +69,18 @@ function SearchArea() {
         </SearchIconWrapper>
         <StyledInputBase
           name="query"
-          defaultValue={searchQuery}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
           placeholder="Search…"
           inputProps={{ 'aria-label': 'search' }}
         />
+        {transition.state === 'submitting' && (
+          <CircularProgress
+            sx={{ marginRight: 2 }}
+            color="inherit"
+            size="20px"
+          />
+        )}
       </Search>
     </Form>
   );

@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Box, CircularProgress, Grid } from '@mui/material';
-import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import type { ActionArgs, LoaderArgs, MetaFunction } from '@remix-run/node';
 import { useFetcher, useLoaderData } from '@remix-run/react';
 import CardItem from '~/components/CardItem';
 import InfiniteScroller from '~/components/InfiniteScroller';
 import { getMovies, movieActions } from '~/data/movies.server';
+import { pageTitle } from '~/root';
 
 export default function TopRated() {
   const topRatedMovies: any = useLoaderData();
@@ -27,10 +28,11 @@ export default function TopRated() {
       <InfiniteScroller
         loading={fetcher.state === 'loading'}
         loadNext={() => {
-          const page = fetcher.data ? fetcher.data.page + 1 : initialPage + 1;
-          if (movies.length === 0 || page > totalPages) {
+          if (movies.length === 0 || totalPages === 1) {
             return;
           }
+
+          const page = fetcher.data ? fetcher.data.page + 1 : initialPage + 1;
 
           const query = `/top-rated?page=${page}`;
           fetcher.load(query);
@@ -71,6 +73,12 @@ export default function TopRated() {
     </Box>
   );
 }
+
+export const meta: MetaFunction = () => {
+  return {
+    title: `Top Rated - ${pageTitle}`,
+  };
+};
 
 export async function loader({ request }: LoaderArgs) {
   const searchParams: any = new URL(request.url).searchParams;

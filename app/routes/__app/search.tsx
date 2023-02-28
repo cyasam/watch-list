@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react';
 import { Box, CircularProgress, Grid, Typography } from '@mui/material';
-import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import type { ActionArgs, LoaderArgs, MetaFunction } from '@remix-run/node';
 import { useFetcher, useLoaderData, useSearchParams } from '@remix-run/react';
 import CardItem from '~/components/CardItem';
 import InfiniteScroller from '~/components/InfiniteScroller';
 import { getSearchMovies, movieActions } from '~/data/movies.server';
 import { AnimatedDiv } from '../__app';
 import { AnimatePresence } from 'framer-motion';
+import { pageTitle } from '~/root';
 
 export default function SearchPage() {
   const searchMovies: any = useLoaderData();
   const [movies, setMovies] = useState(searchMovies?.results);
-  const [totalPages] = useState(searchMovies?.total_pages);
+  const [totalPages, setTotalPages] = useState(searchMovies?.total_pages);
 
   const fetcher = useFetcher();
   const [searchParams] = useSearchParams();
@@ -27,7 +28,8 @@ export default function SearchPage() {
 
   useEffect(() => {
     setMovies(searchMovies?.results);
-  }, [searchQuery, searchMovies?.results]);
+    setTotalPages(searchMovies?.total_pages);
+  }, [searchQuery, searchMovies?.results, searchMovies?.total_pages]);
 
   const initialPage = searchMovies.page;
 
@@ -45,12 +47,13 @@ export default function SearchPage() {
             <InfiniteScroller
               loading={fetcher.state === 'loading'}
               loadNext={() => {
+                if (movies.length === 0 || totalPages === 1) {
+                  return;
+                }
+
                 const page = fetcher.data
                   ? fetcher.data.page + 1
                   : initialPage + 1;
-                if (movies.length === 0 || page > totalPages) {
-                  return;
-                }
 
                 const query = `/search?query=${searchQuery}&page=${page}`;
                 fetcher.load(query);
@@ -94,6 +97,13 @@ export default function SearchPage() {
     </AnimatePresence>
   );
 }
+
+export const meta: MetaFunction = ({ location }) => {
+  const query = location.search.replace('?query=', '');
+  return {
+    title: `Search: ${query} - ${pageTitle}`,
+  };
+};
 
 export async function loader({ request }: LoaderArgs) {
   const searchParams: any = new URL(request.url).searchParams;
