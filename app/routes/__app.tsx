@@ -1,18 +1,14 @@
-import { useCallback } from 'react';
-import { Button, Drawer, styled as styledMui } from '@mui/material';
+import { Drawer, styled as styledMui } from '@mui/material';
 import { Box } from '@mui/system';
 import type { LoaderArgs } from '@remix-run/node';
 import { AnimatePresence, motion } from 'framer-motion';
 import styled from '@emotion/styled';
-import {
-  Outlet,
-  Link as RouterLink,
-  useMatches,
-  useLocation,
-} from '@remix-run/react';
+import { Outlet, useLocation } from '@remix-run/react';
 import Sidebar from '~/components/Sidebar';
 import { getUserSession } from '~/data/auth.server';
 import { getWatchlist } from '~/data/movies.server';
+import Navigation from '~/components/Navigation';
+import SearchArea from '~/components/SearchArea';
 
 const drawerWidth = 320;
 
@@ -38,15 +34,7 @@ const Main = styledMui('main', {
 }));
 
 function AppLayout() {
-  const matches = useMatches();
   const location = useLocation();
-
-  const isActive = useCallback(
-    (routeId: string) => {
-      return !!matches.find((match) => match.id === routeId);
-    },
-    [matches]
-  );
 
   return (
     <AnimatePresence mode="wait">
@@ -66,42 +54,28 @@ function AppLayout() {
         >
           <Sidebar />
         </Drawer>
-        <Box>
+
+        <Box width="100%">
           <Box
             padding={(theme) => theme.spacing(3)}
             position="sticky"
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
             top={0}
             zIndex={1}
             sx={{ backdropFilter: 'blur(20px)' }}
             mb={(theme) => theme.spacing(-3)}
           >
-            <Button
-              variant={
-                isActive('routes/__app/index') ? 'contained' : 'outlined'
-              }
-              component={RouterLink}
-              to="/"
-              sx={{ marginRight: 3 }}
-            >
-              Popular
-            </Button>
-            <Button
-              variant={
-                isActive('routes/__app/top-rated') ? 'contained' : 'outlined'
-              }
-              component={RouterLink}
-              to="/top-rated"
-              sx={{ marginRight: 3 }}
-            >
-              Top Rated
-            </Button>
+            <Navigation />
+            <SearchArea />
           </Box>
+
           <Main open={true}>
             <AnimatedDiv
               key={location.pathname}
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
             >
               <Outlet />
             </AnimatedDiv>
@@ -124,4 +98,4 @@ export async function loader({ request }: LoaderArgs) {
 
 export default AppLayout;
 
-const AnimatedDiv = styled(motion.div)``;
+export const AnimatedDiv = styled(motion.div)``;

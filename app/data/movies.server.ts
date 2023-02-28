@@ -9,6 +9,13 @@ const movieApi = axios.create({
   },
 });
 
+const searchApi = axios.create({
+  baseURL: `${process.env.MOVIE_API_URL}/search`,
+  params: {
+    api_key: process.env.MOVIE_API_KEY,
+  },
+});
+
 export const getMovies = async ({
   page,
   type,
@@ -18,6 +25,22 @@ export const getMovies = async ({
 }) => {
   try {
     const response = await movieApi.get(`/${type}`, { params: { page } });
+
+    return response.data;
+  } catch (error: any) {
+    throw new Error('Could not load movies.');
+  }
+};
+
+export const getSearchMovies = async ({
+  page,
+  query,
+}: {
+  page: string;
+  query: string;
+}) => {
+  try {
+    const response = await searchApi.get(`/movie`, { params: { query, page } });
 
     return response.data;
   } catch (error: any) {

@@ -10,6 +10,7 @@ export default function Index() {
   const popularMovies: any = useLoaderData();
   const fetcher = useFetcher();
   const [movies, setMovies] = useState(popularMovies?.results);
+  const [totalPages] = useState(popularMovies?.total_pages);
 
   useEffect(() => {
     if (!fetcher.data || fetcher.state === 'loading') {
@@ -27,6 +28,10 @@ export default function Index() {
         loading={fetcher.state === 'loading'}
         loadNext={() => {
           const page = fetcher.data ? fetcher.data.page + 1 : initialPage + 1;
+          if (movies.length === 0 || page > totalPages) {
+            return;
+          }
+
           const query = `?index&page=${page}`;
           fetcher.load(query);
         }}
@@ -41,25 +46,28 @@ export default function Index() {
           })}
         </Grid>
       </InfiniteScroller>
-      <Box
-        display="flex"
-        position="absolute"
-        bottom="0"
-        width="100%"
-        justifyContent="center"
-        my={4}
-      >
+
+      {fetcher.data?.page !== totalPages && (
         <Box
-          bgcolor="rgba(0, 0, 0, 0.5)"
           display="flex"
+          position="absolute"
+          bottom="0"
+          width="100%"
           justifyContent="center"
-          alignItems="center"
-          padding={1.5}
-          borderRadius={2}
+          my={4}
         >
-          <CircularProgress />
+          <Box
+            bgcolor="rgba(0, 0, 0, 0.5)"
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            padding={1.5}
+            borderRadius={2}
+          >
+            <CircularProgress />
+          </Box>
         </Box>
-      </Box>
+      )}
     </Box>
   );
 }

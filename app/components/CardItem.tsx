@@ -19,11 +19,11 @@ import Loading from './Alerts/Loading';
 import Success from './Alerts/Success';
 import Error from './Alerts/Error';
 
-const imageBaseUrl = 'https://image.tmdb.org/t/p/w400';
+const imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
 const tmdbMovieDetailBaseUrl = 'https://www.themoviedb.org/movie';
 
 function CardItem({ item }: any) {
-  const { id, title, backdrop_path, release_date, vote_average } = item;
+  const { id, title, poster_path, release_date, vote_average } = item;
   const [openSnack, setSnack] = useState(false);
   const [type, setType] = useState<string>();
 
@@ -55,6 +55,18 @@ function CardItem({ item }: any) {
     [id, watchList?.data]
   );
 
+  const imageUrl = useMemo(() => {
+    if (!poster_path || poster_path.length === 0) {
+      return null;
+    }
+
+    return `${imageBaseUrl}${poster_path}`;
+  }, [poster_path]);
+
+  const detailUrl = useMemo(() => {
+    return `${tmdbMovieDetailBaseUrl}/${id}`;
+  }, [id]);
+
   return (
     <>
       <Card
@@ -70,38 +82,42 @@ function CardItem({ item }: any) {
             flex: 1;
           `}
         >
-          <Box position="relative" mb={1}>
-            {backdrop_path ? (
-              <img
-                src={`${imageBaseUrl}${backdrop_path}`}
-                width="400"
-                height="225"
-                alt={title}
-                loading="lazy"
-                className={css`
-                  width: 100%;
-                  height: auto;
-                  border-radius: 5px;
-                `}
+          <a href={detailUrl} target="_blank" rel="noreferrer">
+            <Box position="relative" mb={1}>
+              {imageUrl ? (
+                <img
+                  src={imageUrl}
+                  alt={title}
+                  width="500"
+                  height="750"
+                  loading="lazy"
+                  className={css`
+                    width: 100%;
+                    height: auto;
+                    border-radius: 5px;
+                  `}
+                />
+              ) : (
+                <Box
+                  width="100%"
+                  sx={{ aspectRatio: '10/15' }}
+                  bgcolor="rgba(255,255,255,0.1)"
+                  borderRadius="5px"
+                />
+              )}
+              <Chip
+                color="primary"
+                sx={{
+                  position: 'absolute',
+                  top: 10,
+                  right: 10,
+                  fontWeight: '600',
+                }}
+                label={vote_average.toFixed(1)}
               />
-            ) : (
-              <Box
-                width="100%"
-                sx={{ aspectRatio: '16/9' }}
-                bgcolor="rgba(255,255,255,0.1)"
-              />
-            )}
-            <Chip
-              color="primary"
-              sx={{
-                position: 'absolute',
-                top: 10,
-                right: 10,
-                fontWeight: '600',
-              }}
-              label={vote_average}
-            />
-          </Box>
+            </Box>
+          </a>
+
           <Box display="flex" justifyContent="space-between">
             <Box>
               <Typography variant="h6" component="h3">
@@ -132,11 +148,7 @@ function CardItem({ item }: any) {
             justify-content: space-between;
           `}
         >
-          <Button
-            size="small"
-            target="_blank"
-            href={`${tmdbMovieDetailBaseUrl}/${id}`}
-          >
+          <Button size="small" target="_blank" href={detailUrl}>
             Learn More
           </Button>
         </CardActions>
