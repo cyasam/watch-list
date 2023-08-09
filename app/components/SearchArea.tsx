@@ -1,7 +1,7 @@
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
-import { Form, useSearchParams, useTransition } from '@remix-run/react';
+import { Form, useSearchParams, useNavigation } from '@remix-run/react';
 import { CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
 
@@ -51,7 +51,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 function SearchArea() {
   const [searchParams] = useSearchParams();
-  const transition = useTransition();
+  const transition = useNavigation();
   const searchQuery = searchParams.get('query');
 
   const defaultValue = searchQuery ?? '';
@@ -63,7 +63,7 @@ function SearchArea() {
 
   const isLoading =
     transition.location?.pathname === '/search' &&
-    transition.state === 'submitting';
+    transition.state === 'loading';
 
   return (
     <Form method="get" action="/search">

@@ -160,18 +160,18 @@ function CardItem({ item }: any) {
         </Loading>
       )}
 
-      {fetcher.type === 'done' && (
+      {fetcher.state === 'idle' && (
         <>
-          {fetcher.data.ok && (
+          {fetcher.data?.ok && (
             <Success open={openSnack} onClose={onSnackClose}>
-              {fetcher.data.type === 'delete'
+              {fetcher.data?.type === 'delete'
                 ? 'Succesfully deleted!'
                 : 'Succesfully added!'}
             </Success>
           )}
-          {!fetcher.data.ok && (
+          {!fetcher.data?.ok && (
             <Error open={openSnack} onClose={onSnackClose}>
-              {fetcher.data.error}
+              {fetcher.data?.error}
             </Error>
           )}
         </>

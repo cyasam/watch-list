@@ -11,13 +11,13 @@ import {
   Form,
   Link as RouterLink,
   useActionData,
-  useTransition,
+  useNavigation,
 } from '@remix-run/react';
 import { login } from '~/data/auth.server';
 
 function Login() {
   const validationErrors = useActionData();
-  const transition = useTransition();
+  const transition = useNavigation();
 
   const isSigning = transition.state !== 'idle';
   return (

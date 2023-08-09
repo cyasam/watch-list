@@ -14,8 +14,7 @@ const InfiniteScroller = (props: {
 
   const onScroll = useCallback(() => {
     const scrollEnded =
-      window.innerHeight + window.pageYOffset >=
-      document.body.offsetHeight - 200;
+      window.innerHeight + window.scrollY >= document.body.offsetHeight - 200;
 
     if (scrollEnded && !loading) {
       scrollListener.current();

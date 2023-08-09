@@ -65,16 +65,16 @@ function WatchList() {
         </Loading>
       )}
 
-      {fetcher.type === 'actionReload' && (
+      {fetcher.state === 'idle' && (
         <>
-          {fetcher.data.ok && (
+          {fetcher.data?.ok && (
             <Success open={openSnack} onClose={onSnackClose}>
               Succesfully deleted!
             </Success>
           )}
-          {!fetcher.data.ok && (
+          {!fetcher.data?.ok && (
             <Error open={openSnack} onClose={onSnackClose}>
-              {fetcher.data.error}
+              {fetcher.data?.error}
             </Error>
           )}
         </>
